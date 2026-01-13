@@ -28,20 +28,15 @@ export function SiteHeader() {
           <div className="w-32 hidden md:block" />
 
           {/* Centered Logo */}
-          <Link href="/" className="flex items-center gap-3">
+          <Link href="/" className="relative flex items-center">
             <Image
-              src="/brand/logos/heart-forward-logo.png"
+              src="/brand/logos/Header-Heart-Forward-Logo.png"
               alt="Heart Forward Foundation"
-              width={44}
-              height={44}
-              className="h-11 w-auto"
+              width={440}
+              height={131}
+              priority={true}
+              className="h-10 w-auto sm:h-12 object-contain"
             />
-            <span className="font-heading text-xl text-[var(--hf-cream)]">
-              Heart Forward
-              <span className="block text-xs text-[var(--hf-text-muted)] font-body tracking-wide">
-                Foundation
-              </span>
-            </span>
           </Link>
 
           {/* Help Now ATX Button */}

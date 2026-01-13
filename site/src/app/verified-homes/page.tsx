@@ -98,9 +98,41 @@ export default function VerifiedHomesPage() {
           </div>
         </section>
 
-        {/* CTA Band */}
+        {/* For Recovery Home Operators */}
         <section className="py-16 sm:py-20 bg-[var(--hf-bg-base)]">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 className="font-heading text-2xl text-[var(--hf-text-primary)] mb-4">
+              Are you a recovery home operator?
+            </h2>
+            <p className="text-[var(--hf-text-secondary)] max-w-2xl mx-auto mb-8">
+              Join our network of verified homes. Receive scholarship-funded residents and connect with a community committed to dignity-centered recovery support.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link
+                href="/homes/apply"
+                className="inline-flex items-center justify-center px-6 py-3 rounded-full bg-[var(--hf-accent)] text-white font-medium hover:bg-[var(--hf-accent-hover)] transition-colors"
+              >
+                Apply for Verification
+              </Link>
+              <Link
+                href="/homes"
+                className="inline-flex items-center justify-center px-6 py-3 rounded-full border border-[var(--hf-glass-border)] text-[var(--hf-text-primary)] font-medium hover:bg-white/5 transition-colors"
+              >
+                Learn More
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* For People Seeking Support */}
+        <section className="py-16 sm:py-20 bg-[var(--hf-bg-elevated)]">
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h2 className="font-heading text-2xl text-[var(--hf-text-primary)] mb-4">
+              Looking for scholarship support?
+            </h2>
+            <p className="text-[var(--hf-text-secondary)] max-w-2xl mx-auto mb-8">
+              If you&apos;re seeking stable recovery-centered living, start with a quick eligibility check.
+            </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link
                 href="/scholarships/eligibility"
@@ -109,10 +141,10 @@ export default function VerifiedHomesPage() {
                 Check Eligibility
               </Link>
               <Link
-                href="/get-involved/partner"
+                href="/contact"
                 className="inline-flex items-center justify-center px-6 py-3 rounded-full border border-[var(--hf-glass-border)] text-[var(--hf-text-primary)] font-medium hover:bg-white/5 transition-colors"
               >
-                Partner With Us
+                Contact Our Team
               </Link>
             </div>
           </div>

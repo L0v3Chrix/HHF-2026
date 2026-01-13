@@ -3,7 +3,7 @@
 import { useState, useCallback, useEffect } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
-import { ChevronRight, X } from "lucide-react";
+import { ChevronRight, X, ExternalLink } from "lucide-react";
 
 export interface FlipDoorOption {
   title: string;
@@ -20,6 +20,15 @@ export interface FlipDoorCardProps {
   options: FlipDoorOption[];
   className?: string;
 }
+
+// Calculate card height based on number of options
+// Each option needs ~56px (py-2 + text), plus header and padding
+const getCardMinHeight = (optionCount: number): string => {
+  const baseHeight = 120; // Header area + padding
+  const optionHeight = 56; // Per option (compact)
+  const totalHeight = baseHeight + (optionCount * optionHeight);
+  return `${Math.max(totalHeight, 420)}px`; // Minimum 420px for front content
+};
 
 export function FlipDoorCard({
   variant,
@@ -57,6 +66,9 @@ export function FlipDoorCard({
   );
 
   const Icon = variant === "support" ? HeartHandsIcon : SproutHandIcon;
+
+  // Calculate dynamic height based on options count
+  const cardMinHeight = getCardMinHeight(options.length);
 
   // Card colors matching V2 mock exactly:
   // Support (left) = plum/purple-magenta
@@ -112,10 +124,11 @@ export function FlipDoorCard({
         {/* Main card */}
         <div
           className={cn(
-            "relative rounded-[24px] p-8 sm:p-10 min-h-[380px]",
+            "relative rounded-[24px] p-6 sm:p-8",
             cardGradient,
             "shadow-2xl shadow-black/40"
           )}
+          style={{ minHeight: cardMinHeight }}
         >
           {/* Glass edge highlight - top edge shine */}
           <div className="absolute inset-x-0 top-0 h-[1px] rounded-t-[24px] bg-gradient-to-r from-transparent via-white/30 to-transparent" />
@@ -143,6 +156,7 @@ export function FlipDoorCard({
           stackedLayer2,
           "border border-white/5"
         )}
+        style={{ minHeight: cardMinHeight }}
       />
       <div
         className={cn(
@@ -150,12 +164,13 @@ export function FlipDoorCard({
           stackedLayer1,
           "border border-white/8"
         )}
+        style={{ minHeight: cardMinHeight }}
       />
 
       {/* Main card with flip */}
       <div
-        className="relative w-full min-h-[380px] cursor-pointer"
-        style={{ perspective: "1200px" }}
+        className="relative w-full"
+        style={{ perspective: "1200px", minHeight: cardMinHeight }}
       >
         <div
           className="relative w-full h-full transition-transform duration-600 ease-out"
@@ -167,11 +182,11 @@ export function FlipDoorCard({
           {/* Front */}
           <div
             className={cn(
-              "absolute inset-0 rounded-[24px] p-8 sm:p-10",
+              "absolute inset-0 rounded-[24px] p-6 sm:p-8",
               cardGradient,
               "shadow-2xl shadow-black/40"
             )}
-            style={{ backfaceVisibility: "hidden" }}
+            style={{ backfaceVisibility: "hidden", minHeight: cardMinHeight }}
           >
             {/* Glass edge highlight - top edge shine like mock */}
             <div className="absolute inset-x-0 top-0 h-[1px] rounded-t-[24px] bg-gradient-to-r from-transparent via-white/25 to-transparent" />
@@ -191,13 +206,14 @@ export function FlipDoorCard({
           {/* Back */}
           <div
             className={cn(
-              "absolute inset-0 rounded-[24px] p-8 sm:p-10",
+              "absolute inset-0 rounded-[24px] p-6 sm:p-8",
               cardGradient,
               "shadow-2xl shadow-black/40"
             )}
             style={{
               backfaceVisibility: "hidden",
               transform: "rotateY(180deg)",
+              minHeight: cardMinHeight,
             }}
           >
             <div className="absolute inset-x-0 top-0 h-[1px] rounded-t-[24px] bg-gradient-to-r from-transparent via-white/25 to-transparent" />
@@ -284,48 +300,73 @@ function CardBack({
   onClose: () => void;
   variant: "support" | "give";
 }) {
+  // Prevent click events from bubbling to parent card container
+  const handleLinkClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+  };
+
   return (
-    <div className="relative flex flex-col h-full z-10">
+    <div
+      className="relative flex flex-col h-full z-20"
+      onClick={(e) => e.stopPropagation()}
+    >
       {/* Close button */}
       <button
-        onClick={onClose}
-        className="absolute top-0 right-0 p-2 rounded-full hover:bg-white/10 transition-colors"
+        onClick={(e) => {
+          e.stopPropagation();
+          onClose();
+        }}
+        className="absolute -top-1 -right-1 p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors border border-white/20"
         aria-label="Close options"
       >
-        <X className="w-5 h-5 text-[var(--hf-cream)]/70" />
+        <X className="w-4 h-4 text-[var(--hf-cream)]" />
       </button>
 
-      {/* Options list */}
-      <nav className="flex-1 space-y-1 pt-2">
+      {/* Options list - compact button style */}
+      <nav className="flex-1 flex flex-col gap-1.5 pt-1 pr-6">
         {options.map((option, index) => {
           const isLast = index === options.length - 1;
           const isHelpNow = option.title.toLowerCase().includes("help now");
 
-          return (
-            <Link
-              key={option.title}
-              href={option.href}
-              target={option.isExternal ? "_blank" : undefined}
-              rel={option.isExternal ? "noopener noreferrer" : undefined}
-              className={cn(
-                "block p-3 rounded-xl transition-all",
-                "hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50",
-                "min-h-[44px] flex flex-col justify-center",
-                isLast && "border-t border-white/10 mt-3 pt-3"
-              )}
-            >
-              <span
-                className={cn(
-                  "font-medium text-sm",
-                  isHelpNow ? "text-[var(--hf-cream)]/60" : "text-[var(--hf-cream)]"
+          const buttonContent = (
+            <>
+              <span className="flex items-center gap-2">
+                <span
+                  className={cn(
+                    "font-medium text-sm",
+                    isHelpNow ? "text-[var(--hf-cream)]/70" : "text-[var(--hf-cream)]"
+                  )}
+                >
+                  {option.title}
+                </span>
+                {option.isExternal && (
+                  <ExternalLink className="w-3 h-3 text-[var(--hf-cream)]/50" />
                 )}
-              >
-                {option.title}
               </span>
-              <span className="text-xs text-[var(--hf-cream)]/60 mt-0.5">
+              <span className="text-xs text-[var(--hf-cream)]/60 leading-tight">
                 {option.description}
               </span>
-            </Link>
+            </>
+          );
+
+          // Use wrapper div for last item separator
+          return (
+            <div key={option.title} className={cn(isLast && "border-t border-white/15 pt-1.5 mt-1")}>
+              <Link
+                href={option.href}
+                target={option.isExternal ? "_blank" : undefined}
+                rel={option.isExternal ? "noopener noreferrer" : undefined}
+                onClick={handleLinkClick}
+                className={cn(
+                  "block px-3 py-2 rounded-lg transition-all",
+                  "bg-white/5 hover:bg-white/15 border border-white/10 hover:border-white/25",
+                  "focus:outline-none focus-visible:ring-2 focus-visible:ring-white/50",
+                  "cursor-pointer relative z-30"
+                )}
+              >
+                {buttonContent}
+              </Link>
+            </div>
           );
         })}
       </nav>

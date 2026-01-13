@@ -28,6 +28,11 @@ const supportOptions: FlipDoorOption[] = [
     href: "/events",
   },
   {
+    title: "Share / Host an Event",
+    description: "Bring education and connection to your community.",
+    href: "/events",
+  },
+  {
     title: "Help Now ATX",
     description: "Need something outside our scope? Help Now ATX can connect you.",
     href: process.env.NEXT_PUBLIC_HELPNOWATX_URL || "https://helpnowatx.org",
@@ -56,6 +61,11 @@ const giveOptions: FlipDoorOption[] = [
     title: "Share / Host an Event",
     description: "Bring education and connection to your community.",
     href: "/events",
+  },
+  {
+    title: "Become a Verified Recovery Home",
+    description: "Apply for verification so scholarship-funded residents can find your home.",
+    href: "/homes/apply",
   },
   {
     title: "Help Now ATX",
@@ -99,13 +109,13 @@ export default function Home() {
         </div>
 
         {/* Content */}
-        <div className="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 sm:pt-32 pb-20">
+        <div className="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 sm:pt-24 pb-16">
           {/* Hero Text - matching spec copy */}
-          <div className="text-center mb-10 sm:mb-14 animate-fade-in">
-            <h1 className="font-heading text-[2.25rem] sm:text-[2.75rem] md:text-[3.25rem] lg:text-[3.75rem] text-[var(--hf-cream)] italic leading-[1.15] mb-5 max-w-4xl mx-auto tracking-[-0.01em]">
+          <div className="text-center mb-8 sm:mb-10 animate-fade-in">
+            <h1 className="font-heading text-[2rem] sm:text-[2.5rem] md:text-[3rem] lg:text-[3.5rem] text-[var(--hf-cream)] italic leading-[1.15] mb-4 max-w-4xl mx-auto tracking-[-0.01em]">
               You&apos;re not alone. And you deserve support that feels safe.
             </h1>
-            <p className="text-base sm:text-lg text-[var(--hf-text-secondary)] max-w-2xl mx-auto leading-relaxed mb-3">
+            <p className="text-base sm:text-lg text-[var(--hf-text-secondary)] max-w-2xl mx-auto leading-relaxed mb-2">
               We offer recovery living scholarships for people in early recovery, harm reduction resources, and community education—grounded in dignity, choice, and care.
             </p>
             <p className="text-sm text-[var(--hf-text-muted)] max-w-xl mx-auto">

@@ -29,7 +29,7 @@ export default function GetInvolvedPage() {
         {/* Cards */}
         <section className="py-16 sm:py-20 bg-[var(--hf-bg-elevated)]">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {[
                 {
                   title: "Donate",
@@ -48,6 +48,12 @@ export default function GetInvolvedPage() {
                   description: "Build sustained community support.",
                   href: "/get-involved/partner",
                   cta: "Partner With Us",
+                },
+                {
+                  title: "Become a Verified Home",
+                  description: "Apply for verification to receive scholarship-funded residents.",
+                  href: "/homes/apply",
+                  cta: "Apply Now",
                 },
               ].map((card) => (
                 <div
