@@ -1,0 +1,138 @@
+{
+  "version": "1.0.0",
+  "description": "Heart Forward Foundation form schemas for Google Sheets",
+  "sheets": {
+    "contact": {
+      "spreadsheetId": "1lr9dNdS1_rnJR5qaA1d7NrWNeC4Em2LtrGI4VZ_Uwgo",
+      "headers": [
+        "Timestamp",
+        "Name",
+        "Email",
+        "Phone",
+        "Topic",
+        "Message",
+        "Newsletter Opt-in"
+      ],
+      "columns": {
+        "A": { "name": "Timestamp", "type": "datetime", "required": true, "auto": true },
+        "B": { "name": "Name", "type": "string", "required": true },
+        "C": { "name": "Email", "type": "email", "required": true },
+        "D": { "name": "Phone", "type": "phone", "required": false },
+        "E": { "name": "Topic", "type": "dropdown", "required": true, "values": ["Scholarships", "Resources", "Events", "Volunteering", "Partnership", "Other"] },
+        "F": { "name": "Message", "type": "text", "required": true },
+        "G": { "name": "Newsletter Opt-in", "type": "checkbox", "required": false }
+      }
+    },
+    "volunteer": {
+      "spreadsheetId": "1BIQwrLomRHYElzDqVQ3XNA_B0xqbyGx7UEwyclEpr-o",
+      "headers": [
+        "Timestamp",
+        "Full Name",
+        "Email",
+        "Phone",
+        "Preferred Contact Method",
+        "Interests",
+        "Availability",
+        "Notes",
+        "Consent Acknowledged"
+      ],
+      "columns": {
+        "A": { "name": "Timestamp", "type": "datetime", "required": true, "auto": true },
+        "B": { "name": "Full Name", "type": "string", "required": true },
+        "C": { "name": "Email", "type": "email", "required": true },
+        "D": { "name": "Phone", "type": "phone", "required": false },
+        "E": { "name": "Preferred Contact Method", "type": "dropdown", "required": false, "values": ["Email", "Text", "Phone"] },
+        "F": { "name": "Interests", "type": "multiselect", "required": false, "values": ["Events", "Outreach", "Admin support", "Community education", "Other"] },
+        "G": { "name": "Availability", "type": "string", "required": true },
+        "H": { "name": "Notes", "type": "text", "required": false },
+        "I": { "name": "Consent Acknowledged", "type": "checkbox", "required": true }
+      }
+    },
+    "partner": {
+      "spreadsheetId": "1bW27Ud_Uuey4vtL2Dn8eZyPJg94Ip5zcXy6d9Bdk7xM",
+      "headers": [
+        "Timestamp",
+        "Organization Name",
+        "Contact Name",
+        "Email",
+        "Partnership Interest",
+        "Notes"
+      ],
+      "columns": {
+        "A": { "name": "Timestamp", "type": "datetime", "required": true, "auto": true },
+        "B": { "name": "Organization Name", "type": "string", "required": true },
+        "C": { "name": "Contact Name", "type": "string", "required": true },
+        "D": { "name": "Email", "type": "email", "required": true },
+        "E": { "name": "Partnership Interest", "type": "dropdown", "required": true, "values": ["Sponsorship", "In-kind", "Referral partner", "Other"] },
+        "F": { "name": "Notes", "type": "text", "required": false }
+      }
+    },
+    "homes": {
+      "spreadsheetId": "19c7LE2eJz_Zsrr5_zS40N3SrEqSeGcM5SooGhgkajEA",
+      "headers": [
+        "Timestamp",
+        "Is Recovery Home",
+        "Has Capacity (2+)",
+        "Accepts Referrals",
+        "Has House Rules",
+        "Home Name",
+        "Contact Name",
+        "Email",
+        "Phone",
+        "Website",
+        "Operating Length",
+        "Description",
+        "Street Address",
+        "City",
+        "State",
+        "ZIP Code",
+        "Total Capacity",
+        "Current Openings",
+        "Gender Served",
+        "Monthly Cost",
+        "Recovery Program Required",
+        "MAT Allowed",
+        "House Rules",
+        "Staffing Level",
+        "Relapse Approach",
+        "Certifications",
+        "Additional Notes",
+        "Confirmed Accurate",
+        "Allow Contact",
+        "Notify Changes"
+      ],
+      "columns": {
+        "A": { "name": "Timestamp", "type": "datetime", "required": true, "auto": true },
+        "B": { "name": "Is Recovery Home", "type": "yesno", "required": true, "section": "eligibility" },
+        "C": { "name": "Has Capacity (2+)", "type": "yesno", "required": true, "section": "eligibility" },
+        "D": { "name": "Accepts Referrals", "type": "yesno", "required": true, "section": "eligibility" },
+        "E": { "name": "Has House Rules", "type": "yesno", "required": true, "section": "eligibility" },
+        "F": { "name": "Home Name", "type": "string", "required": true, "section": "about" },
+        "G": { "name": "Contact Name", "type": "string", "required": true, "section": "about" },
+        "H": { "name": "Email", "type": "email", "required": true, "section": "about" },
+        "I": { "name": "Phone", "type": "phone", "required": true, "section": "about" },
+        "J": { "name": "Website", "type": "url", "required": false, "section": "about" },
+        "K": { "name": "Operating Length", "type": "dropdown", "required": false, "section": "about", "values": ["Less than 1 year", "1-2 years", "3-5 years", "5+ years"] },
+        "L": { "name": "Description", "type": "text", "required": false, "section": "about" },
+        "M": { "name": "Street Address", "type": "string", "required": true, "section": "location" },
+        "N": { "name": "City", "type": "string", "required": true, "section": "location" },
+        "O": { "name": "State", "type": "string", "required": true, "section": "location" },
+        "P": { "name": "ZIP Code", "type": "string", "required": true, "section": "location" },
+        "Q": { "name": "Total Capacity", "type": "number", "required": true, "section": "location" },
+        "R": { "name": "Current Openings", "type": "number", "required": false, "section": "location" },
+        "S": { "name": "Gender Served", "type": "dropdown", "required": true, "section": "location", "values": ["Men only", "Women only", "All genders", "Other"] },
+        "T": { "name": "Monthly Cost", "type": "currency", "required": false, "section": "location" },
+        "U": { "name": "Recovery Program Required", "type": "dropdown", "required": true, "section": "policies", "values": ["Yes", "No", "Encouraged but not required"] },
+        "V": { "name": "MAT Allowed", "type": "dropdown", "required": false, "section": "policies", "values": ["Yes", "No", "Case by case"] },
+        "W": { "name": "House Rules", "type": "multiselect", "required": false, "section": "policies", "values": ["No alcohol or drugs on premises", "Curfew hours", "Mandatory house meetings", "Chores or shared responsibilities", "Guest policies", "Random or scheduled drug testing", "Employment or volunteer requirements"] },
+        "X": { "name": "Staffing Level", "type": "dropdown", "required": true, "section": "policies", "values": ["24/7", "Part-time", "On-call", "No"] },
+        "Y": { "name": "Relapse Approach", "type": "text", "required": false, "section": "policies" },
+        "Z": { "name": "Certifications", "type": "multiselect", "required": false, "section": "policies", "values": ["NARR", "TARR", "Oxford House", "State licensing", "Other", "None"] },
+        "AA": { "name": "Additional Notes", "type": "text", "required": false, "section": "policies" },
+        "AB": { "name": "Confirmed Accurate", "type": "checkbox", "required": true, "section": "consent" },
+        "AC": { "name": "Allow Contact", "type": "checkbox", "required": true, "section": "consent" },
+        "AD": { "name": "Notify Changes", "type": "checkbox", "required": true, "section": "consent" }
+      }
+    }
+  }
+}

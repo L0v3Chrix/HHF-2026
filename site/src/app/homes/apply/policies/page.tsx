@@ -3,8 +3,52 @@
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useHomesFunnel } from "@/components/funnel/HomesFunnelProvider";
+import { SavedIndicator } from "@/components/funnel/SavedIndicator";
+import {
+  HomesPoliciesData,
+  HOUSE_RULES_OPTIONS,
+  CERTIFICATION_OPTIONS,
+} from "@/types/homes-funnel";
 
 export default function HomesPoliciesPage() {
+  const router = useRouter();
+  const { data, setStepData, isDirty, markStepComplete } = useHomesFunnel();
+  const formData = data.policies;
+
+  const updateField = <K extends keyof HomesPoliciesData>(
+    field: K,
+    value: HomesPoliciesData[K]
+  ) => {
+    setStepData("policies", { ...formData, [field]: value });
+  };
+
+  const toggleArrayItem = (
+    field: "houseRules" | "certifications",
+    item: string
+  ) => {
+    const currentArray = formData[field];
+    if (currentArray.includes(item)) {
+      updateField(
+        field,
+        currentArray.filter((i) => i !== item)
+      );
+    } else {
+      updateField(field, [...currentArray, item]);
+    }
+  };
+
+  const handleContinue = (e: React.FormEvent) => {
+    e.preventDefault();
+    markStepComplete(4);
+    router.push("/homes/apply/review");
+  };
+
+  // Validation - at minimum need recovery program and staffing answered
+  const isValid =
+    formData.recoveryProgramRequired !== "" && formData.staffingLevel !== "";
+
   return (
     <div className="min-h-screen bg-[var(--hf-bg-base)]">
       <SiteHeader />
@@ -17,7 +61,8 @@ export default function HomesPoliciesPage() {
               Policies &amp; practices
             </h1>
             <p className="text-[var(--hf-text-secondary)]">
-              Your approach to recovery support, house rules, and resident safety.
+              Your approach to recovery support, house rules, and resident
+              safety.
             </p>
           </div>
         </section>
@@ -25,12 +70,17 @@ export default function HomesPoliciesPage() {
         {/* Progress Indicator */}
         <section className="py-4 bg-[var(--hf-bg-base)]">
           <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-center gap-2 text-sm text-[var(--hf-text-muted)]">
-              <span className="text-[var(--hf-accent)] font-medium">Step 4 of 5:</span>
-              <span>Policies &amp; practices</span>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-sm text-[var(--hf-text-muted)]">
+                <span className="text-[var(--hf-accent)] font-medium">
+                  Step 4 of 5:
+                </span>
+                <span>Policies &amp; practices</span>
+              </div>
+              <SavedIndicator isDirty={isDirty} />
             </div>
             <div className="mt-4 h-1 bg-[var(--hf-glass-border)] rounded-full overflow-hidden">
-              <div className="h-full w-[80%] bg-[var(--hf-accent)] rounded-full" />
+              <div className="h-full w-[80%] bg-[var(--hf-accent)] rounded-full transition-all duration-300" />
             </div>
           </div>
         </section>
@@ -39,7 +89,7 @@ export default function HomesPoliciesPage() {
         <section className="py-12 sm:py-16 bg-[var(--hf-bg-elevated)]">
           <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="glass rounded-2xl p-8">
-              <form className="space-y-8">
+              <form onSubmit={handleContinue} className="space-y-8">
                 {/* Recovery Requirements */}
                 <div>
                   <h3 className="font-heading text-lg text-[var(--hf-text-primary)] mb-4">
@@ -48,21 +98,44 @@ export default function HomesPoliciesPage() {
                   <div className="space-y-4">
                     <div>
                       <label className="block text-sm font-medium text-[var(--hf-text-primary)] mb-2">
-                        Do you require residents to be actively working a recovery program?
+                        Do you require residents to be actively working a
+                        recovery program?{" "}
+                        <span className="text-[var(--hf-accent)]">*</span>
                       </label>
-                      <div className="flex gap-4">
-                        {["Yes", "No", "Encouraged but not required"].map((option) => (
+                      <div className="flex flex-wrap gap-4">
+                        {(
+                          [
+                            { value: "yes", label: "Yes" },
+                            { value: "no", label: "No" },
+                            {
+                              value: "encouraged but not required",
+                              label: "Encouraged but not required",
+                            },
+                          ] as const
+                        ).map((option) => (
                           <label
-                            key={option}
+                            key={option.value}
                             className="flex items-center gap-2 cursor-pointer"
                           >
                             <input
                               type="radio"
                               name="recoveryProgram"
-                              value={option.toLowerCase()}
+                              value={option.value}
+                              checked={
+                                formData.recoveryProgramRequired === option.value
+                              }
+                              onChange={(e) =>
+                                updateField(
+                                  "recoveryProgramRequired",
+                                  e.target
+                                    .value as HomesPoliciesData["recoveryProgramRequired"]
+                                )
+                              }
                               className="w-4 h-4 text-[var(--hf-accent)]"
                             />
-                            <span className="text-sm text-[var(--hf-text-secondary)]">{option}</span>
+                            <span className="text-sm text-[var(--hf-text-secondary)]">
+                              {option.label}
+                            </span>
                           </label>
                         ))}
                       </div>
@@ -73,21 +146,38 @@ export default function HomesPoliciesPage() {
                         Do you allow MAT (Medication-Assisted Treatment)?
                       </label>
                       <p className="text-xs text-[var(--hf-text-muted)] mb-2">
-                        Heart Forward supports harm reduction approaches including MAT.
+                        Heart Forward supports harm reduction approaches
+                        including MAT.
                       </p>
-                      <div className="flex gap-4">
-                        {["Yes", "No", "Case by case"].map((option) => (
+                      <div className="flex flex-wrap gap-4">
+                        {(
+                          [
+                            { value: "yes", label: "Yes" },
+                            { value: "no", label: "No" },
+                            { value: "case by case", label: "Case by case" },
+                          ] as const
+                        ).map((option) => (
                           <label
-                            key={option}
+                            key={option.value}
                             className="flex items-center gap-2 cursor-pointer"
                           >
                             <input
                               type="radio"
                               name="mat"
-                              value={option.toLowerCase()}
+                              value={option.value}
+                              checked={formData.matAllowed === option.value}
+                              onChange={(e) =>
+                                updateField(
+                                  "matAllowed",
+                                  e.target
+                                    .value as HomesPoliciesData["matAllowed"]
+                                )
+                              }
                               className="w-4 h-4 text-[var(--hf-accent)]"
                             />
-                            <span className="text-sm text-[var(--hf-text-secondary)]">{option}</span>
+                            <span className="text-sm text-[var(--hf-text-secondary)]">
+                              {option.label}
+                            </span>
                           </label>
                         ))}
                       </div>
@@ -109,25 +199,20 @@ export default function HomesPoliciesPage() {
                         Select all that apply.
                       </p>
                       <div className="space-y-2">
-                        {[
-                          "No alcohol or drugs on premises",
-                          "Curfew hours",
-                          "Mandatory house meetings",
-                          "Chores or shared responsibilities",
-                          "Guest policies",
-                          "Random or scheduled drug testing",
-                          "Employment or volunteer requirements",
-                        ].map((rule) => (
+                        {HOUSE_RULES_OPTIONS.map((rule) => (
                           <label
                             key={rule}
                             className="flex items-center gap-3 cursor-pointer"
                           >
                             <input
                               type="checkbox"
-                              value={rule}
+                              checked={formData.houseRules.includes(rule)}
+                              onChange={() => toggleArrayItem("houseRules", rule)}
                               className="w-4 h-4 text-[var(--hf-accent)] rounded"
                             />
-                            <span className="text-sm text-[var(--hf-text-secondary)]">{rule}</span>
+                            <span className="text-sm text-[var(--hf-text-secondary)]">
+                              {rule}
+                            </span>
                           </label>
                         ))}
                       </div>
@@ -143,21 +228,39 @@ export default function HomesPoliciesPage() {
                   <div className="space-y-4">
                     <div>
                       <label className="block text-sm font-medium text-[var(--hf-text-primary)] mb-2">
-                        Is there staff or a house manager on-site?
+                        Is there staff or a house manager on-site?{" "}
+                        <span className="text-[var(--hf-accent)]">*</span>
                       </label>
-                      <div className="flex gap-4">
-                        {["24/7", "Part-time", "On-call", "No"].map((option) => (
+                      <div className="flex flex-wrap gap-4">
+                        {(
+                          [
+                            { value: "24/7", label: "24/7" },
+                            { value: "part-time", label: "Part-time" },
+                            { value: "on-call", label: "On-call" },
+                            { value: "no", label: "No" },
+                          ] as const
+                        ).map((option) => (
                           <label
-                            key={option}
+                            key={option.value}
                             className="flex items-center gap-2 cursor-pointer"
                           >
                             <input
                               type="radio"
                               name="staffing"
-                              value={option.toLowerCase()}
+                              value={option.value}
+                              checked={formData.staffingLevel === option.value}
+                              onChange={(e) =>
+                                updateField(
+                                  "staffingLevel",
+                                  e.target
+                                    .value as HomesPoliciesData["staffingLevel"]
+                                )
+                              }
                               className="w-4 h-4 text-[var(--hf-accent)]"
                             />
-                            <span className="text-sm text-[var(--hf-text-secondary)]">{option}</span>
+                            <span className="text-sm text-[var(--hf-text-secondary)]">
+                              {option.label}
+                            </span>
                           </label>
                         ))}
                       </div>
@@ -168,12 +271,17 @@ export default function HomesPoliciesPage() {
                         What happens if a resident relapses?
                       </label>
                       <textarea
+                        value={formData.relapseApproach}
+                        onChange={(e) =>
+                          updateField("relapseApproach", e.target.value)
+                        }
                         rows={3}
                         placeholder="Describe your approach to relapse..."
                         className="w-full px-4 py-3 rounded-lg bg-[var(--hf-bg-base)] border border-[var(--hf-glass-border)] text-[var(--hf-text-primary)] placeholder:text-[var(--hf-text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--hf-accent)] resize-none"
                       />
                       <p className="text-xs text-[var(--hf-text-muted)] mt-1">
-                        We value homes that approach relapse with compassion while maintaining safety.
+                        We value homes that approach relapse with compassion
+                        while maintaining safety.
                       </p>
                     </div>
                   </div>
@@ -190,27 +298,26 @@ export default function HomesPoliciesPage() {
                         Do you have any certifications or affiliations?
                       </label>
                       <p className="text-xs text-[var(--hf-text-muted)] mb-3">
-                        Select all that apply. These are not required for verification.
+                        Select all that apply. These are not required for
+                        verification.
                       </p>
                       <div className="space-y-2">
-                        {[
-                          "NARR (National Alliance for Recovery Residences)",
-                          "TARR (Texas Alliance of Recovery Residences)",
-                          "Oxford House affiliation",
-                          "State licensing or certification",
-                          "Other certification",
-                          "None currently",
-                        ].map((cert) => (
+                        {CERTIFICATION_OPTIONS.map((cert) => (
                           <label
                             key={cert}
                             className="flex items-center gap-3 cursor-pointer"
                           >
                             <input
                               type="checkbox"
-                              value={cert}
+                              checked={formData.certifications.includes(cert)}
+                              onChange={() =>
+                                toggleArrayItem("certifications", cert)
+                              }
                               className="w-4 h-4 text-[var(--hf-accent)] rounded"
                             />
-                            <span className="text-sm text-[var(--hf-text-secondary)]">{cert}</span>
+                            <span className="text-sm text-[var(--hf-text-secondary)]">
+                              {cert}
+                            </span>
                           </label>
                         ))}
                       </div>
@@ -224,6 +331,10 @@ export default function HomesPoliciesPage() {
                     Anything else we should know?
                   </label>
                   <textarea
+                    value={formData.additionalNotes}
+                    onChange={(e) =>
+                      updateField("additionalNotes", e.target.value)
+                    }
                     rows={3}
                     placeholder="Optional: Share any additional context about your home's approach..."
                     className="w-full px-4 py-3 rounded-lg bg-[var(--hf-bg-base)] border border-[var(--hf-glass-border)] text-[var(--hf-text-primary)] placeholder:text-[var(--hf-text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--hf-accent)] resize-none"
@@ -238,12 +349,17 @@ export default function HomesPoliciesPage() {
                   >
                     Back
                   </Link>
-                  <Link
-                    href="/homes/apply/review"
-                    className="flex-1 px-6 py-3 rounded-full bg-[var(--hf-accent)] text-white font-medium text-center hover:bg-[var(--hf-accent-hover)] transition-colors"
+                  <button
+                    type="submit"
+                    disabled={!isValid}
+                    className={`flex-1 px-6 py-3 rounded-full font-medium text-center transition-colors ${
+                      isValid
+                        ? "bg-[var(--hf-accent)] text-white hover:bg-[var(--hf-accent-hover)]"
+                        : "bg-[var(--hf-glass)] text-[var(--hf-text-muted)] cursor-not-allowed"
+                    }`}
                   >
                     Review Application
-                  </Link>
+                  </button>
                 </div>
               </form>
             </div>

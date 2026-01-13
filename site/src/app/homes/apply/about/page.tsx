@@ -3,8 +3,35 @@
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useHomesFunnel } from "@/components/funnel/HomesFunnelProvider";
+import { SavedIndicator } from "@/components/funnel/SavedIndicator";
+import { HomesAboutData, OPERATING_LENGTH_OPTIONS } from "@/types/homes-funnel";
 
 export default function HomesAboutPage() {
+  const router = useRouter();
+  const { data, setStepData, isDirty, markStepComplete } = useHomesFunnel();
+  const formData = data.about;
+
+  const updateField = <K extends keyof HomesAboutData>(
+    field: K,
+    value: HomesAboutData[K]
+  ) => {
+    setStepData("about", { ...formData, [field]: value });
+  };
+
+  const handleContinue = (e: React.FormEvent) => {
+    e.preventDefault();
+    markStepComplete(2);
+    router.push("/homes/apply/location");
+  };
+
+  const isValid =
+    formData.homeName.trim() !== "" &&
+    formData.contactName.trim() !== "" &&
+    formData.email.trim() !== "" &&
+    formData.phone.trim() !== "";
+
   return (
     <div className="min-h-screen bg-[var(--hf-bg-base)]">
       <SiteHeader />
@@ -25,12 +52,15 @@ export default function HomesAboutPage() {
         {/* Progress Indicator */}
         <section className="py-4 bg-[var(--hf-bg-base)]">
           <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-center gap-2 text-sm text-[var(--hf-text-muted)]">
-              <span className="text-[var(--hf-accent)] font-medium">Step 2 of 5:</span>
-              <span>About your home</span>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-sm text-[var(--hf-text-muted)]">
+                <span className="text-[var(--hf-accent)] font-medium">Step 2 of 5:</span>
+                <span>About your home</span>
+              </div>
+              <SavedIndicator isDirty={isDirty} />
             </div>
             <div className="mt-4 h-1 bg-[var(--hf-glass-border)] rounded-full overflow-hidden">
-              <div className="h-full w-[40%] bg-[var(--hf-accent)] rounded-full" />
+              <div className="h-full w-[40%] bg-[var(--hf-accent)] rounded-full transition-all duration-300" />
             </div>
           </div>
         </section>
@@ -39,52 +69,64 @@ export default function HomesAboutPage() {
         <section className="py-12 sm:py-16 bg-[var(--hf-bg-elevated)]">
           <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="glass rounded-2xl p-8">
-              <form className="space-y-6">
+              <form onSubmit={handleContinue} className="space-y-6">
                 {/* Home Name */}
                 <div>
                   <label className="block text-sm font-medium text-[var(--hf-text-primary)] mb-2">
-                    Home name
+                    Home name <span className="text-[var(--hf-accent)]">*</span>
                   </label>
                   <input
                     type="text"
+                    value={formData.homeName}
+                    onChange={(e) => updateField("homeName", e.target.value)}
                     placeholder="What is your recovery home called?"
                     className="w-full px-4 py-3 rounded-lg bg-[var(--hf-bg-base)] border border-[var(--hf-glass-border)] text-[var(--hf-text-primary)] placeholder:text-[var(--hf-text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--hf-accent)]"
+                    required
                   />
                 </div>
 
                 {/* Contact Person Name */}
                 <div>
                   <label className="block text-sm font-medium text-[var(--hf-text-primary)] mb-2">
-                    Primary contact name
+                    Primary contact name <span className="text-[var(--hf-accent)]">*</span>
                   </label>
                   <input
                     type="text"
+                    value={formData.contactName}
+                    onChange={(e) => updateField("contactName", e.target.value)}
                     placeholder="Who should we contact about verification?"
                     className="w-full px-4 py-3 rounded-lg bg-[var(--hf-bg-base)] border border-[var(--hf-glass-border)] text-[var(--hf-text-primary)] placeholder:text-[var(--hf-text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--hf-accent)]"
+                    required
                   />
                 </div>
 
                 {/* Email */}
                 <div>
                   <label className="block text-sm font-medium text-[var(--hf-text-primary)] mb-2">
-                    Email
+                    Email <span className="text-[var(--hf-accent)]">*</span>
                   </label>
                   <input
                     type="email"
+                    value={formData.email}
+                    onChange={(e) => updateField("email", e.target.value)}
                     placeholder="contact@yourhome.com"
                     className="w-full px-4 py-3 rounded-lg bg-[var(--hf-bg-base)] border border-[var(--hf-glass-border)] text-[var(--hf-text-primary)] placeholder:text-[var(--hf-text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--hf-accent)]"
+                    required
                   />
                 </div>
 
                 {/* Phone */}
                 <div>
                   <label className="block text-sm font-medium text-[var(--hf-text-primary)] mb-2">
-                    Phone
+                    Phone <span className="text-[var(--hf-accent)]">*</span>
                   </label>
                   <input
                     type="tel"
+                    value={formData.phone}
+                    onChange={(e) => updateField("phone", e.target.value)}
                     placeholder="(###) ###-####"
                     className="w-full px-4 py-3 rounded-lg bg-[var(--hf-bg-base)] border border-[var(--hf-glass-border)] text-[var(--hf-text-primary)] placeholder:text-[var(--hf-text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--hf-accent)]"
+                    required
                   />
                 </div>
 
@@ -95,6 +137,8 @@ export default function HomesAboutPage() {
                   </label>
                   <input
                     type="url"
+                    value={formData.website}
+                    onChange={(e) => updateField("website", e.target.value)}
                     placeholder="https://yourhome.com"
                     className="w-full px-4 py-3 rounded-lg bg-[var(--hf-bg-base)] border border-[var(--hf-glass-border)] text-[var(--hf-text-primary)] placeholder:text-[var(--hf-text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--hf-accent)]"
                   />
@@ -106,13 +150,21 @@ export default function HomesAboutPage() {
                     How long has your home been operating?
                   </label>
                   <select
+                    value={formData.operatingLength}
+                    onChange={(e) =>
+                      updateField(
+                        "operatingLength",
+                        e.target.value as HomesAboutData["operatingLength"]
+                      )
+                    }
                     className="w-full px-4 py-3 rounded-lg bg-[var(--hf-bg-base)] border border-[var(--hf-glass-border)] text-[var(--hf-text-primary)] focus:outline-none focus:ring-2 focus:ring-[var(--hf-accent)]"
                   >
                     <option value="">Select...</option>
-                    <option value="less-than-1">Less than 1 year</option>
-                    <option value="1-2">1-2 years</option>
-                    <option value="3-5">3-5 years</option>
-                    <option value="5-plus">5+ years</option>
+                    {OPERATING_LENGTH_OPTIONS.map((opt) => (
+                      <option key={opt.value} value={opt.value}>
+                        {opt.label}
+                      </option>
+                    ))}
                   </select>
                 </div>
 
@@ -125,6 +177,8 @@ export default function HomesAboutPage() {
                     What makes your recovery home special? What&apos;s your approach?
                   </p>
                   <textarea
+                    value={formData.description}
+                    onChange={(e) => updateField("description", e.target.value)}
                     rows={4}
                     placeholder="Share a brief description..."
                     className="w-full px-4 py-3 rounded-lg bg-[var(--hf-bg-base)] border border-[var(--hf-glass-border)] text-[var(--hf-text-primary)] placeholder:text-[var(--hf-text-muted)] focus:outline-none focus:ring-2 focus:ring-[var(--hf-accent)] resize-none"
@@ -139,12 +193,17 @@ export default function HomesAboutPage() {
                   >
                     Back
                   </Link>
-                  <Link
-                    href="/homes/apply/location"
-                    className="flex-1 px-6 py-3 rounded-full bg-[var(--hf-accent)] text-white font-medium text-center hover:bg-[var(--hf-accent-hover)] transition-colors"
+                  <button
+                    type="submit"
+                    disabled={!isValid}
+                    className={`flex-1 px-6 py-3 rounded-full font-medium text-center transition-colors ${
+                      isValid
+                        ? "bg-[var(--hf-accent)] text-white hover:bg-[var(--hf-accent-hover)]"
+                        : "bg-[var(--hf-glass)] text-[var(--hf-text-muted)] cursor-not-allowed"
+                    }`}
                   >
                     Continue
-                  </Link>
+                  </button>
                 </div>
               </form>
             </div>

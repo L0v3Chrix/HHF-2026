@@ -1,54 +1,57 @@
 "use client";
 
-import { useState } from "react";
 import { SiteHeader } from "@/components/layout/SiteHeader";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useHomesFunnel } from "@/components/funnel/HomesFunnelProvider";
+import { SavedIndicator } from "@/components/funnel/SavedIndicator";
+import { HomesEligibilityData } from "@/types/homes-funnel";
 
 export default function HomesEligibilityPage() {
   const router = useRouter();
-  const [answers, setAnswers] = useState({
-    isRecoveryHome: "",
-    hasCapacity: "",
-    acceptsReferrals: "",
-    hasHouseRules: "",
-  });
-  const [showIneligible, setShowIneligible] = useState(false);
+  const { data, setStepData, isDirty, isLoaded, markStepComplete } = useHomesFunnel();
+  const answers = data.eligibility;
+
+  const setAnswers = (update: Partial<HomesEligibilityData>) => {
+    setStepData("eligibility", { ...answers, ...update });
+  };
 
   const allAnswered = Object.values(answers).every((v) => v !== "");
   const isEligible = Object.values(answers).every((v) => v === "yes");
 
   const handleContinue = () => {
     if (isEligible) {
+      markStepComplete(1);
       router.push("/homes/apply/about");
-    } else {
-      setShowIneligible(true);
     }
   };
 
   const questions = [
     {
-      key: "isRecoveryHome",
+      key: "isRecoveryHome" as const,
       question: "Is your home specifically for people in recovery from substance use?",
       helpText: "We verify homes that provide recovery-focused living environments.",
     },
     {
-      key: "hasCapacity",
+      key: "hasCapacity" as const,
       question: "Do you have capacity for at least 2 residents?",
       helpText: "This helps us understand your home's scope.",
     },
     {
-      key: "acceptsReferrals",
+      key: "acceptsReferrals" as const,
       question: "Are you willing to accept referrals from Heart Forward?",
       helpText: "Verification allows us to refer residents seeking safe housing.",
     },
     {
-      key: "hasHouseRules",
+      key: "hasHouseRules" as const,
       question: "Do you have written house rules or expectations for residents?",
       helpText: "Clear guidelines help create a stable environment.",
     },
   ];
+
+  // Show ineligible message if they answered "no" to anything
+  const showIneligible = allAnswered && !isEligible;
 
   if (showIneligible) {
     return (
@@ -120,12 +123,15 @@ export default function HomesEligibilityPage() {
         {/* Progress Indicator */}
         <section className="py-4 bg-[var(--hf-bg-base)]">
           <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex items-center justify-center gap-2 text-sm text-[var(--hf-text-muted)]">
-              <span className="text-[var(--hf-accent)] font-medium">Step 1 of 5:</span>
-              <span>Eligibility</span>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-sm text-[var(--hf-text-muted)]">
+                <span className="text-[var(--hf-accent)] font-medium">Step 1 of 5:</span>
+                <span>Eligibility</span>
+              </div>
+              <SavedIndicator isDirty={isDirty} />
             </div>
             <div className="mt-4 h-1 bg-[var(--hf-glass-border)] rounded-full overflow-hidden">
-              <div className="h-full w-[20%] bg-[var(--hf-accent)] rounded-full" />
+              <div className="h-full w-[20%] bg-[var(--hf-accent)] rounded-full transition-all duration-300" />
             </div>
           </div>
         </section>
@@ -133,6 +139,13 @@ export default function HomesEligibilityPage() {
         {/* Questions */}
         <section className="py-12 sm:py-16 bg-[var(--hf-bg-elevated)]">
           <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
+            {/* Privacy note */}
+            <div className="mb-6 p-4 rounded-lg bg-[var(--hf-bg-base)] border border-[var(--hf-glass-border)]">
+              <p className="text-sm text-[var(--hf-text-muted)]">
+                Your information stays private. We&apos;ll only use it to support your verification application.
+              </p>
+            </div>
+
             <div className="space-y-6">
               {questions.map((q) => (
                 <div key={q.key} className="glass rounded-2xl p-6">
@@ -147,7 +160,7 @@ export default function HomesEligibilityPage() {
                       <label
                         key={option}
                         className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg border cursor-pointer transition-colors ${
-                          answers[q.key as keyof typeof answers] === option.toLowerCase()
+                          answers[q.key] === option.toLowerCase()
                             ? "border-[var(--hf-accent)] bg-[var(--hf-accent)]/10 text-[var(--hf-accent)]"
                             : "border-[var(--hf-glass-border)] text-[var(--hf-text-secondary)] hover:border-[var(--hf-accent)]/50"
                         }`}
@@ -156,12 +169,9 @@ export default function HomesEligibilityPage() {
                           type="radio"
                           name={q.key}
                           value={option.toLowerCase()}
-                          checked={answers[q.key as keyof typeof answers] === option.toLowerCase()}
+                          checked={answers[q.key] === option.toLowerCase()}
                           onChange={(e) =>
-                            setAnswers((prev) => ({
-                              ...prev,
-                              [q.key]: e.target.value,
-                            }))
+                            setAnswers({ [q.key]: e.target.value as "yes" | "no" })
                           }
                           className="sr-only"
                         />
@@ -177,9 +187,9 @@ export default function HomesEligibilityPage() {
             <div className="mt-8">
               <button
                 onClick={handleContinue}
-                disabled={!allAnswered}
+                disabled={!allAnswered || !isEligible}
                 className={`w-full px-6 py-3 rounded-full font-medium text-center transition-colors ${
-                  allAnswered
+                  allAnswered && isEligible
                     ? "bg-[var(--hf-accent)] text-white hover:bg-[var(--hf-accent-hover)]"
                     : "bg-[var(--hf-glass)] text-[var(--hf-text-muted)] cursor-not-allowed"
                 }`}
@@ -187,6 +197,13 @@ export default function HomesEligibilityPage() {
                 Continue
               </button>
             </div>
+
+            {/* Loading state placeholder */}
+            {!isLoaded && (
+              <div className="mt-4 text-center text-sm text-[var(--hf-text-muted)]">
+                Loading your progress...
+              </div>
+            )}
           </div>
         </section>
       </main>
