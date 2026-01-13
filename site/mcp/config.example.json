@@ -1,0 +1,42 @@
+{
+  "$schema": "https://example.com/mcp-config-schema.json",
+  "mcpServers": {
+    "filesystem": {
+      "command": "npx",
+      "args": ["@modelcontextprotocol/server-filesystem", "${PROJECT_ROOT}"],
+      "description": "File system operations for this project"
+    },
+    "playwright": {
+      "command": "npx",
+      "args": ["@modelcontextprotocol/server-puppeteer"],
+      "description": "Browser automation for E2E testing and visual regression"
+    },
+    "supabase": {
+      "command": "npx",
+      "args": ["supabase-mcp-server"],
+      "env": {
+        "SUPABASE_URL": "${NEXT_PUBLIC_SUPABASE_URL}",
+        "SUPABASE_SERVICE_ROLE_KEY": "${SUPABASE_SERVICE_ROLE_KEY}"
+      },
+      "description": "Supabase database operations (Phase 2)"
+    },
+    "context7": {
+      "command": "npx",
+      "args": ["@context7/mcp-server"],
+      "description": "Documentation and knowledge lookup"
+    },
+    "brave-search": {
+      "command": "npx",
+      "args": ["@anthropic/mcp-server-brave-search"],
+      "env": {
+        "BRAVE_API_KEY": "${BRAVE_API_KEY}"
+      },
+      "description": "Web search capabilities"
+    }
+  },
+  "notes": {
+    "placeholder": "This is an example configuration. Actual setup depends on your Claude Code environment.",
+    "PROJECT_ROOT": "Replace with actual project path",
+    "env_vars": "Environment variables should be set in your shell or .env file"
+  }
+}

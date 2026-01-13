@@ -1,0 +1,337 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+/* ============================================================================
+   HEART FORWARD FOUNDATION — Design Tokens
+   ============================================================================ */
+
+:root {
+  /* Background */
+  --hf-bg-base: #1a1512;
+  --hf-bg-elevated: #2a2520;
+
+  /* Foreground / Text */
+  --hf-text-primary: #f5f0e8;
+  --hf-text-secondary: #c8c0b0;
+  --hf-text-muted: #8a8070;
+
+  /* Brand: Maroon */
+  --hf-maroon: #7a2332;
+  --hf-maroon-dark: #4a1520;
+  --hf-maroon-light: #9a3342;
+
+  /* Brand: Amber */
+  --hf-amber: #c4623a;
+  --hf-amber-dark: #8a3f24;
+  --hf-amber-light: #d4825a;
+
+  /* Brand: Red (Actions) */
+  --hf-red: #a03040;
+  --hf-red-hover: #b04050;
+
+  /* Surface */
+  --hf-glass: rgba(255, 255, 255, 0.05);
+  --hf-glass-border: rgba(255, 255, 255, 0.1);
+
+  /* Buttons */
+  --hf-btn-cream-bg: #f5f0e8;
+  --hf-btn-cream-text: #3a2a20;
+  --hf-btn-cream-hover: #ebe5db;
+  --hf-btn-red-bg: #a03040;
+  --hf-btn-red-text: #f5f0e8;
+  --hf-btn-red-hover: #b04050;
+
+  /* Help Now ATX */
+  --hf-helpnow-bg: rgba(120, 50, 60, 0.7);
+  --hf-helpnow-border: rgba(160, 80, 90, 0.5);
+
+  /* Typography - uses next/font CSS variables */
+  --font-heading: var(--font-playfair), Georgia, serif;
+  --font-body: var(--font-inter), system-ui, sans-serif;
+
+  /* Spacing */
+  --radius-card: 1.5rem;
+  --radius-button: 9999px;
+
+  /* Shadows */
+  --shadow-card: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  --shadow-glow-maroon: 0 0 60px rgba(122, 35, 50, 0.4);
+  --shadow-glow-amber: 0 0 60px rgba(196, 98, 58, 0.4);
+
+  /* Motion */
+  --duration-fast: 150ms;
+  --duration-normal: 300ms;
+  --duration-slow: 500ms;
+  --ease-default: cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Focus Ring */
+  --focus-ring: 0 0 0 2px var(--hf-bg-base), 0 0 0 4px var(--hf-maroon-light);
+
+  /* shadcn/ui overrides for dark theme */
+  --radius: 0.625rem;
+  --background: oklch(0.12 0.02 40);
+  --foreground: oklch(0.95 0.01 80);
+  --card: oklch(0.15 0.02 40);
+  --card-foreground: oklch(0.95 0.01 80);
+  --popover: oklch(0.15 0.02 40);
+  --popover-foreground: oklch(0.95 0.01 80);
+  --primary: oklch(0.45 0.15 15);
+  --primary-foreground: oklch(0.95 0.01 80);
+  --secondary: oklch(0.2 0.02 40);
+  --secondary-foreground: oklch(0.95 0.01 80);
+  --muted: oklch(0.25 0.02 40);
+  --muted-foreground: oklch(0.65 0.02 80);
+  --accent: oklch(0.55 0.18 40);
+  --accent-foreground: oklch(0.95 0.01 80);
+  --destructive: oklch(0.55 0.2 20);
+  --border: oklch(0.3 0.02 40);
+  --input: oklch(0.25 0.02 40);
+  --ring: oklch(0.45 0.15 15);
+}
+
+/* ============================================================================
+   BASE STYLES
+   ============================================================================ */
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: var(--font-body);
+    background-color: var(--hf-bg-base);
+    color: var(--hf-text-primary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* Focus styles */
+  :focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+  }
+
+  /* Selection */
+  ::selection {
+    background-color: var(--hf-maroon);
+    color: var(--hf-text-primary);
+  }
+}
+
+/* ============================================================================
+   TYPOGRAPHY
+   ============================================================================ */
+
+@layer base {
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    color: var(--hf-text-primary);
+    line-height: 1.1;
+  }
+
+  h1 {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-style: italic;
+    font-weight: 400;
+  }
+
+  h2 {
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 600;
+  }
+
+  h3 {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 600;
+  }
+
+  p {
+    color: var(--hf-text-secondary);
+    line-height: 1.6;
+  }
+
+  a {
+    color: var(--hf-text-primary);
+    text-decoration: none;
+    transition: color var(--duration-fast) var(--ease-default);
+  }
+
+  a:hover {
+    color: var(--hf-amber-light);
+  }
+}
+
+/* ============================================================================
+   COMPONENT UTILITIES
+   ============================================================================ */
+
+@layer utilities {
+  /* Glass effect */
+  .glass {
+    background: var(--hf-glass);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--hf-glass-border);
+  }
+
+  /* Card gradients */
+  .card-support {
+    background: linear-gradient(135deg, rgba(122, 35, 50, 0.85) 0%, rgba(74, 21, 32, 0.95) 100%);
+    box-shadow: var(--shadow-card), var(--shadow-glow-maroon);
+  }
+
+  .card-give {
+    background: linear-gradient(135deg, rgba(196, 98, 58, 0.85) 0%, rgba(138, 63, 36, 0.95) 100%);
+    box-shadow: var(--shadow-card), var(--shadow-glow-amber);
+  }
+
+  /* Text colors */
+  .text-cream { color: var(--hf-text-primary); }
+  .text-muted { color: var(--hf-text-secondary); }
+  .text-subtle { color: var(--hf-text-muted); }
+
+  /* Background colors */
+  .bg-hf { background-color: var(--hf-bg-base); }
+  .bg-hf-elevated { background-color: var(--hf-bg-elevated); }
+
+  /* Button variants */
+  .btn-cream {
+    background-color: var(--hf-btn-cream-bg);
+    color: var(--hf-btn-cream-text);
+    transition: all var(--duration-fast) var(--ease-default);
+  }
+
+  .btn-cream:hover {
+    background-color: var(--hf-btn-cream-hover);
+  }
+
+  .btn-red {
+    background-color: var(--hf-btn-red-bg);
+    color: var(--hf-btn-red-text);
+    transition: all var(--duration-fast) var(--ease-default);
+  }
+
+  .btn-red:hover {
+    background-color: var(--hf-btn-red-hover);
+  }
+
+  /* Font families */
+  .font-heading { font-family: var(--font-heading); }
+  .font-body { font-family: var(--font-body); }
+
+  /* Hero text style */
+  .hero-text {
+    font-family: var(--font-heading);
+    font-style: italic;
+    font-weight: 400;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    line-height: 1.1;
+    color: var(--hf-text-primary);
+  }
+}
+
+/* ============================================================================
+   ANIMATIONS
+   ============================================================================ */
+
+@layer utilities {
+  @keyframes fade-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes slide-up {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes pulse-glow {
+    0%, 100% {
+      box-shadow: var(--shadow-card), 0 0 40px rgba(122, 35, 50, 0.3);
+    }
+    50% {
+      box-shadow: var(--shadow-card), 0 0 60px rgba(122, 35, 50, 0.5);
+    }
+  }
+
+  .animate-fade-in {
+    animation: fade-in var(--duration-normal) var(--ease-default);
+  }
+
+  .animate-slide-up {
+    animation: slide-up var(--duration-normal) var(--ease-default);
+  }
+}
+
+/* ============================================================================
+   TAILWIND THEME EXTENSIONS (for @theme inline)
+   ============================================================================ */
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-body);
+  --font-serif: var(--font-heading);
+
+  /* Heart Forward brand colors */
+  --color-hf-bg: var(--hf-bg-base);
+  --color-hf-bg-elevated: var(--hf-bg-elevated);
+  --color-hf-text: var(--hf-text-primary);
+  --color-hf-text-muted: var(--hf-text-secondary);
+  --color-hf-maroon: var(--hf-maroon);
+  --color-hf-maroon-dark: var(--hf-maroon-dark);
+  --color-hf-maroon-light: var(--hf-maroon-light);
+  --color-hf-amber: var(--hf-amber);
+  --color-hf-amber-dark: var(--hf-amber-dark);
+  --color-hf-amber-light: var(--hf-amber-light);
+  --color-hf-red: var(--hf-red);
+
+  /* shadcn compatibility */
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* Radius */
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: var(--radius-card);
+}
