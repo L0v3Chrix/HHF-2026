@@ -5,61 +5,61 @@ import { SiteFooter } from "@/components/layout/SiteFooter";
 import { FlipDoorCard, type FlipDoorOption } from "@/components/FlipDoorCard";
 import { HelpNowATXWidget } from "@/components/HelpNowATXWidget";
 
-// Door A: "I Need Support" options
+// Door A: "I Need Support" options - from spec copy
 const supportOptions: FlipDoorOption[] = [
   {
     title: "Recovery Living Scholarships",
-    description: "Apply for housing support on your recovery journey",
+    description: "Explore support for verified recovery homes.",
     href: "/scholarships",
   },
   {
-    title: "Check Your Eligibility",
-    description: "See if you qualify for our scholarship program",
+    title: "Check Eligibility",
+    description: "A quick, private check—no pressure.",
     href: "/scholarships/eligibility",
   },
   {
     title: "Harm Reduction Resources",
-    description: "Tools and information for safer choices",
+    description: "Practical tools for safer choices and support.",
     href: "/resources",
   },
   {
     title: "Events & Education",
-    description: "Workshops, support groups, and community gatherings",
+    description: "Community learning, connection, and hope.",
     href: "/events",
   },
   {
     title: "Help Now ATX",
-    description: "Immediate support outside Heart Forward's scope",
+    description: "Need something outside our scope? Help Now ATX can connect you.",
     href: process.env.NEXT_PUBLIC_HELPNOWATX_URL || "https://helpnowatx.org",
     isExternal: true,
   },
 ];
 
-// Door B: "I Want to Give" options (matching mock exactly)
+// Door B: "Get Involved" options - from spec copy
 const giveOptions: FlipDoorOption[] = [
   {
-    title: "Make a Donation",
-    description: "Fund scholarships and support services",
+    title: "Donate",
+    description: "Help fund recovery living scholarships and education.",
     href: "/get-involved/donate",
   },
   {
-    title: "Volunteer With Us",
-    description: "Share your time and talents",
+    title: "Volunteer",
+    description: "Offer time, skills, or presence—at your pace.",
     href: "/get-involved/volunteer",
   },
   {
-    title: "Partner or Sponsor",
-    description: "Collaborate as an organization",
+    title: "Partner / Sponsor",
+    description: "Build sustained support with community partners.",
     href: "/get-involved/partner",
   },
   {
-    title: "Host or Share an Event",
-    description: "Spread awareness in your community",
+    title: "Share / Host an Event",
+    description: "Bring education and connection to your community.",
     href: "/events",
   },
   {
     title: "Help Now ATX",
-    description: "Support our crisis response partner",
+    description: "Know someone who needs immediate, compassionate support?",
     href: process.env.NEXT_PUBLIC_HELPNOWATX_URL || "https://helpnowatx.org",
     isExternal: true,
   },
@@ -100,37 +100,40 @@ export default function Home() {
 
         {/* Content */}
         <div className="relative z-10 w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 sm:pt-32 pb-20">
-          {/* Hero Text - matching mock: elegant serif italic */}
+          {/* Hero Text - matching spec copy */}
           <div className="text-center mb-10 sm:mb-14 animate-fade-in">
             <h1 className="font-heading text-[2.25rem] sm:text-[2.75rem] md:text-[3.25rem] lg:text-[3.75rem] text-[var(--hf-cream)] italic leading-[1.15] mb-5 max-w-4xl mx-auto tracking-[-0.01em]">
-              You&apos;re not alone. And you can help someone feel safe again.
+              You&apos;re not alone. And you deserve support that feels safe.
             </h1>
-            <p className="text-base sm:text-lg text-[var(--hf-text-secondary)] max-w-xl mx-auto leading-relaxed">
-              This is a space of comfort and hope. Take your time.
+            <p className="text-base sm:text-lg text-[var(--hf-text-secondary)] max-w-2xl mx-auto leading-relaxed mb-3">
+              We offer recovery living scholarships for people in early recovery, harm reduction resources, and community education—grounded in dignity, choice, and care.
+            </p>
+            <p className="text-sm text-[var(--hf-text-muted)] max-w-xl mx-auto">
+              Take your time. Choose the door that fits your moment.
             </p>
           </div>
 
-          {/* Flip Door Cards - wider gap, better proportion */}
+          {/* Flip Door Cards - from spec copy */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10 max-w-4xl mx-auto animate-slide-up">
             <FlipDoorCard
               variant="support"
               title="I Need Support"
-              description="Find compassionate resources, safety, and someone to talk to."
-              buttonText="Find Help Now"
+              description="Find scholarship support, harm reduction resources, and caring next steps—without judgment."
+              buttonText="See Options"
               options={supportOptions}
             />
             <FlipDoorCard
               variant="give"
-              title="I Want to Give"
-              description="Empower our community by donating, volunteering, or partnering."
-              buttonText="Give Hope"
+              title="Get Involved"
+              description="Support recovery-centered living and harm reduction—through giving, volunteering, or partnering."
+              buttonText="Choose How"
               options={giveOptions}
             />
           </div>
         </div>
       </main>
 
-      {/* What We Do Section */}
+      {/* What We Do Section - from spec copy */}
       <section
         id="what-we-do"
         className="py-20 sm:py-28 bg-[var(--hf-bg-elevated)]"
@@ -140,10 +143,6 @@ export default function Home() {
             <h2 className="font-heading text-3xl sm:text-4xl text-[var(--hf-text-primary)] mb-4">
               What We Do
             </h2>
-            <p className="text-[var(--hf-text-secondary)] max-w-2xl mx-auto">
-              Heart Forward Foundation supports recovery through housing
-              scholarships, harm reduction resources, and community education.
-            </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -151,17 +150,17 @@ export default function Home() {
               {
                 title: "Recovery Living Scholarships",
                 description:
-                  "Financial assistance for safe, supportive housing during recovery.",
+                  "Scholarships that support placement in verified recovery homes—so people can focus on healing and stability.",
               },
               {
                 title: "Harm Reduction Resources",
                 description:
-                  "Tools and information to help people make safer choices.",
+                  "Tools, education, and referrals that honor autonomy and reduce risk—without shame.",
               },
               {
-                title: "Community Education",
+                title: "Community Events",
                 description:
-                  "Workshops and events that reduce stigma and build understanding.",
+                  "Workshops and gatherings that grow skills, compassion, and connection.",
               },
             ].map((item) => (
               <div
@@ -180,25 +179,23 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Trust/Impact Section */}
+      {/* Impact Snapshot Section - from spec copy */}
       <section className="py-20 sm:py-28 bg-[var(--hf-bg-base)]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="font-heading text-3xl sm:text-4xl text-[var(--hf-text-primary)] mb-4">
-              Our Impact
+              Small moments of support can change a whole week.
             </h2>
             <p className="text-[var(--hf-text-secondary)] max-w-2xl mx-auto">
-              Together, we&apos;re building a community where everyone has
-              access to recovery support.
+              We measure impact through placements, follow-through, and community connection—always centering human dignity.
             </p>
           </div>
 
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 lg:gap-8 mb-8">
             {[
-              { stat: "500+", label: "Scholarships Funded" },
-              { stat: "85%", label: "Housing Retention Rate" },
-              { stat: "2,000+", label: "Resources Shared" },
-              { stat: "50+", label: "Community Events" },
+              { stat: "—", label: "Scholarships supported" },
+              { stat: "—", label: "Education/events hosted" },
+              { stat: "—", label: "Resource connections made" },
             ].map((item) => (
               <div
                 key={item.label}
@@ -213,6 +210,51 @@ export default function Home() {
               </div>
             ))}
           </div>
+
+          <div className="text-center">
+            <a
+              href="/impact"
+              className="inline-flex items-center gap-2 text-[var(--hf-accent)] hover:text-[var(--hf-accent-hover)] transition-colors font-medium"
+            >
+              See Our Impact
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* Verified Homes Trust Module - from spec copy */}
+      <section className="py-20 sm:py-28 bg-[var(--hf-bg-elevated)]">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="font-heading text-3xl sm:text-4xl text-[var(--hf-text-primary)] mb-4">
+            Verified homes. Clear expectations. Real support.
+          </h2>
+          <p className="text-[var(--hf-text-secondary)] max-w-2xl mx-auto mb-8">
+            We work with recovery homes that meet our verification criteria, so support is aligned with safety, dignity, and accountability.
+          </p>
+          <a
+            href="/verified-homes"
+            className="inline-flex items-center justify-center px-6 py-3 rounded-full bg-[var(--hf-accent)] text-white font-medium hover:bg-[var(--hf-accent-hover)] transition-colors"
+          >
+            How Verification Works
+          </a>
+        </div>
+      </section>
+
+      {/* Bottom Reassurance - from spec copy */}
+      <section className="py-16 sm:py-20 bg-[var(--hf-bg-base)]">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <p className="text-[var(--hf-text-secondary)] mb-6">
+            If you&apos;re not sure where to start, that&apos;s okay. Start with eligibility or send us a note—we&apos;ll respond with care.
+          </p>
+          <a
+            href="/contact"
+            className="inline-flex items-center justify-center px-6 py-3 rounded-full border border-[var(--hf-glass-border)] text-[var(--hf-text-primary)] font-medium hover:bg-white/5 transition-colors"
+          >
+            Contact Our Team
+          </a>
         </div>
       </section>
 
