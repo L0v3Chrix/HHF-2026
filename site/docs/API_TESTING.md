@@ -4,8 +4,34 @@
 
 1. Copy `.env.example` to `.env.local`
 2. Set `APPS_SCRIPT_WEBHOOK_URL` (already has default)
-3. Set `APPS_SCRIPT_SHARED_SECRET` to match your Apps Script secret
-4. Start dev server: `npm run dev`
+3. Set `APPS_SCRIPT_SHARED_SECRET` to match your Apps Script `HFF_SHARED_SECRET`
+4. Run the one-time setup to initialize sheets (see below)
+5. Start dev server: `npm run dev`
+
+## One-Time Sheet Setup
+
+Before testing, initialize all Google Sheets with proper headers:
+
+```bash
+curl -X POST "https://script.google.com/a/macros/heartfwd.info/s/AKfycbxNoBvZ0OtrSg0V5DXgEGvmOIRHMYpQ6TON7k500JsVuQKMu934hBolLzB4xCzO1tk4/exec" \
+  -H "Content-Type: application/json" \
+  -d '{"secret":"YOUR_SHARED_SECRET","action":"setup"}'
+```
+
+This creates "Submissions" tabs with proper headers in all 5 spreadsheets.
+
+**Expected Response:**
+```json
+{
+  "ok": true,
+  "message": "Setup complete",
+  "results": {
+    "apply": { "createdTab": true, "wroteHeaders": true, "finalHeaderCount": 18 },
+    "contact": { "createdTab": true, "wroteHeaders": true, "finalHeaderCount": 11 },
+    ...
+  }
+}
+```
 
 ## Test Commands
 

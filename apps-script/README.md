@@ -1,254 +1,274 @@
-# Heart Forward Foundation — Google Apps Script Webhook
+# Heart Forward Foundation - Apps Script Form Handler
 
-This folder contains the Google Apps Script code that receives form submissions from the Heart Forward website and appends them to Google Sheets.
+Schema-driven Google Sheets form submission handler with automatic header management.
 
 ## Architecture
 
 ```
-[Website Form] → [Next.js API Route] → [Apps Script Webhook] → [Google Sheet]
+Next.js API Route  →  Apps Script Web App  →  Google Sheets
+     (POST)              (doPost)             (append row)
 ```
 
-- Single webhook handles all 4 form types
-- Routes by `formType` parameter
-- Validates required fields
-- Auto-ensures headers match schema
-- Returns JSON responses
+## Files
 
-## Setup Instructions
+| File | Purpose |
+|------|---------|
+| `Code.gs` | Main entry point, doPost/doGet handlers |
+| `config.gs` | TYPE_CONFIG with spreadsheet IDs and headers |
+| `sheets.gs` | Sheet/header management, row appending |
+| `util.gs` | JSON helpers, object flattening |
 
-### Step 1: Create the Apps Script Project
+## Deployment
+
+### Step 1: Create Apps Script Project
 
 1. Go to [script.google.com](https://script.google.com)
-2. Click **New Project**
-3. Name it: `HFF Forms Webhook`
-4. Delete default content in `Code.gs`
-5. Copy entire contents of `Code.gs` from this folder and paste
+2. Create a new project: "HFF Form Handler"
+3. Delete the default `Code.gs` content
 
-### Step 2: Configure Script Properties
+### Step 2: Add All Files
 
-1. In Apps Script editor, click **Project Settings** (gear icon)
+Copy each `.gs` file from this folder into the Apps Script editor:
+- `Code.gs`
+- `config.gs`
+- `sheets.gs`
+- `util.gs`
+
+### Step 3: Set Script Properties
+
+1. Click **Project Settings** (gear icon)
 2. Scroll to **Script Properties**
-3. Add the following properties:
+3. Add property:
+   - **Name:** `HFF_SHARED_SECRET`
+   - **Value:** (same value as `APPS_SCRIPT_SHARED_SECRET` in Next.js `.env.local`)
 
-| Property | Value |
-|----------|-------|
-| `HFF_SECRET` | Generate a secure random string (32+ chars) |
-| `CONTACT_SHEET_ID` | `1lr9dNdS1_rnJR5qaA1d7NrWNeC4Em2LtrGI4VZ_Uwgo` |
-| `VOLUNTEER_SHEET_ID` | `1BIQwrLomRHYElzDqVQ3XNA_B0xqbyGx7UEwyclEpr-o` |
-| `PARTNER_SHEET_ID` | `1bW27Ud_Uuey4vtL2Dn8eZyPJg94Ip5zcXy6d9Bdk7xM` |
-| `HOMES_SHEET_ID` | `19c7LE2eJz_Zsrr5_zS40N3SrEqSeGcM5SooGhgkajEA` |
-
-### Step 3: Grant Permissions to Sheets
-
-The Apps Script needs editor access to all 4 Google Sheets:
-
-1. Open each Google Sheet URL
-2. Click **Share** button
-3. Add the email address associated with your Google account running the Apps Script
-4. Give **Editor** access
-
-### Step 4: Initialize Sheet Headers
-
-1. In Apps Script editor, select function: `initializeAllSheets`
-2. Click **Run**
-3. Grant permissions when prompted (first run only)
-4. Check **Execution log** for results
-
-This will:
-- Set correct headers in row 1 of each sheet
-- Bold the header row
-- Freeze the header row
-- Auto-resize columns
-
-### Step 5: Deploy as Web App
+### Step 4: Deploy as Web App
 
 1. Click **Deploy** → **New deployment**
-2. Click gear icon → **Web app**
-3. Configure:
-   - **Description**: `HFF Forms v1.0`
-   - **Execute as**: `Me`
-   - **Who has access**: `Anyone`
-4. Click **Deploy**
-5. Copy the **Web app URL** (looks like: `https://script.google.com/macros/s/xxx.../exec`)
+2. Settings:
+   - **Type:** Web app
+   - **Execute as:** Me
+   - **Who has access:** Anyone
+3. Click **Deploy**
+4. Copy the Web App URL
 
-### Step 6: Configure Website Environment
+### Step 5: Update Next.js Environment
 
-Add to your `.env.local` file:
+Add to `site/.env.local`:
+```bash
+APPS_SCRIPT_WEBHOOK_URL=https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec
+APPS_SCRIPT_SHARED_SECRET=your-random-32-char-secret
+```
+
+## One-Time Setup
+
+After deployment, run the setup command to initialize all sheets with headers:
 
 ```bash
-# Google Sheets Form Backend
-GOOGLE_APPS_SCRIPT_WEBHOOK=https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec
-HFF_SHEETS_SECRET=your_same_secret_from_step_2
+curl -X POST "https://script.google.com/a/macros/heartfwd.info/s/AKfycbxNoBvZ0OtrSg0V5DXgEGvmOIRHMYpQ6TON7k500JsVuQKMu934hBolLzB4xCzO1tk4/exec" \
+  -H "Content-Type: application/json" \
+  -d '{"secret":"YOUR_SHARED_SECRET","action":"setup"}'
 ```
 
-## Sheet Schemas
-
-### Contact Form
-| Column | Field | Required | Notes |
-|--------|-------|----------|-------|
-| A | Timestamp | Auto | ISO 8601 format |
-| B | Name | Yes | |
-| C | Email | Yes | |
-| D | Phone | No | |
-| E | Topic | Yes | Dropdown: Scholarships, Resources, Events, Volunteering, Partnership, Other |
-| F | Message | Yes | |
-| G | Newsletter Opt-in | No | Yes/No |
-
-### Volunteer Form
-| Column | Field | Required | Notes |
-|--------|-------|----------|-------|
-| A | Timestamp | Auto | ISO 8601 format |
-| B | Full Name | Yes | |
-| C | Email | Yes | |
-| D | Phone | No | |
-| E | Preferred Contact Method | No | Dropdown: Email, Text, Phone |
-| F | Interests | No | Comma-separated |
-| G | Availability | Yes | |
-| H | Notes | No | |
-| I | Consent Acknowledged | Yes | Yes/No |
-
-### Partner Form
-| Column | Field | Required | Notes |
-|--------|-------|----------|-------|
-| A | Timestamp | Auto | ISO 8601 format |
-| B | Organization Name | Yes | |
-| C | Contact Name | Yes | |
-| D | Email | Yes | |
-| E | Partnership Interest | Yes | Dropdown: Sponsorship, In-kind, Referral partner, Other |
-| F | Notes | No | |
-
-### Homes Verification
-| Column | Field | Required | Notes |
-|--------|-------|----------|-------|
-| A | Timestamp | Auto | |
-| B | Is Recovery Home | Yes | Yes/No |
-| C | Has Capacity (2+) | Yes | Yes/No |
-| D | Accepts Referrals | Yes | Yes/No |
-| E | Has House Rules | Yes | Yes/No |
-| F | Home Name | Yes | |
-| G | Contact Name | Yes | |
-| H | Email | Yes | |
-| I | Phone | Yes | |
-| J | Website | No | |
-| K | Operating Length | No | Less than 1 year, 1-2 years, 3-5 years, 5+ years |
-| L | Description | No | |
-| M | Street Address | Yes | |
-| N | City | Yes | |
-| O | State | Yes | |
-| P | ZIP Code | Yes | |
-| Q | Total Capacity | Yes | Number |
-| R | Current Openings | No | Number |
-| S | Gender Served | Yes | Men only, Women only, All genders, Other |
-| T | Monthly Cost | No | Dollar amount |
-| U | Recovery Program Required | Yes | Yes, No, Encouraged but not required |
-| V | MAT Allowed | No | Yes, No, Case by case |
-| W | House Rules | No | Comma-separated |
-| X | Staffing Level | Yes | 24/7, Part-time, On-call, No |
-| Y | Relapse Approach | No | |
-| Z | Certifications | No | Comma-separated |
-| AA | Additional Notes | No | |
-| AB | Confirmed Accurate | Yes | Yes/No |
-| AC | Allow Contact | Yes | Yes/No |
-| AD | Notify Changes | Yes | Yes/No |
-
-## API Usage
-
-### POST Request Format
-
-```json
-{
-  "formType": "contact|volunteer|partner|homes",
-  "data": {
-    // Form-specific fields
-  },
-  "secret": "your_hff_secret"
-}
-```
-
-### Response Format
-
-Success:
+Expected response:
 ```json
 {
   "ok": true,
-  "message": "contact form submitted successfully"
+  "message": "Setup complete",
+  "results": {
+    "apply": { "createdTab": true, "wroteHeaders": true, "finalHeaderCount": 18 },
+    "contact": { "createdTab": true, "wroteHeaders": true, "finalHeaderCount": 11 },
+    "volunteer": { "createdTab": true, "wroteHeaders": true, "finalHeaderCount": 13 },
+    "partner": { "createdTab": true, "wroteHeaders": true, "finalHeaderCount": 10 },
+    "homes-verification": { "createdTab": true, "wroteHeaders": true, "finalHeaderCount": 34 }
+  }
 }
 ```
 
-Error:
-```json
-{
-  "ok": false,
-  "error": "Missing required fields: email, message"
-}
+## Header Schemas
+
+### Universal Columns (all types)
+| Column | Description |
+|--------|-------------|
+| `submittedAt` | ISO timestamp from submission |
+| `sourceType` | Form type identifier |
+| `status` | Default: "Submitted" |
+| `adminNotes` | For manual notes |
+
+### Apply Form (18 columns)
+```
+submittedAt, sourceType, status, adminNotes,
+firstName, lastName, email, phone,
+programType, applicationReason,
+recoveryStatus, sobrietyDate, currentHousing,
+referralSource, additionalNotes,
+consentToContact, consentToTerms,
+rawJson
+```
+
+### Contact Form (11 columns)
+```
+submittedAt, sourceType, status, adminNotes,
+name, email, phone, topic, message, newsletterOptIn,
+rawJson
+```
+
+### Volunteer Form (13 columns)
+```
+submittedAt, sourceType, status, adminNotes,
+fullName, email, phone, preferredContactMethod,
+interests, availability, notes, consentAcknowledged,
+rawJson
+```
+
+### Partner Form (10 columns)
+```
+submittedAt, sourceType, status, adminNotes,
+organizationName, contactName, email, partnershipInterest, notes,
+rawJson
+```
+
+### Homes Verification Form (34 columns)
+```
+submittedAt, sourceType, status, adminNotes,
+eligibility.isRecoveryHome, eligibility.hasCapacity, eligibility.acceptsReferrals, eligibility.hasHouseRules,
+about.homeName, about.contactName, about.email, about.phone, about.website, about.operatingLength, about.description,
+location.streetAddress, location.city, location.state, location.zip, location.totalCapacity, location.currentOpenings, location.genderServed, location.monthlyCost,
+policies.recoveryProgramRequired, policies.matAllowed, policies.houseRules, policies.staffingLevel, policies.relapseApproach, policies.certifications, policies.additionalNotes,
+consent.confirmAccurate, consent.allowContact, consent.notifyChanges,
+rawJson
 ```
 
 ## Testing
 
-### Manual Test via Apps Script
-
-1. Open Apps Script editor
-2. Select function: `testContactSubmission`
-3. Click **Run**
-4. Check Execution log and Google Sheet
-
-### Schema Verification
-
-GET request to webhook URL with `?action=verify-schemas` returns a detailed report of all sheets:
+### Test Contact Submission
 
 ```bash
-curl "YOUR_WEBHOOK_URL?action=verify-schemas"
+curl -X POST "APPS_SCRIPT_URL" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "secret": "YOUR_SECRET",
+    "type": "contact",
+    "submittedAt": "2025-01-13T12:00:00Z",
+    "data": {
+      "name": "Test User",
+      "email": "test@example.com",
+      "phone": "512-555-1234",
+      "topic": "scholarships",
+      "message": "Test message",
+      "newsletterOptIn": true
+    }
+  }'
 ```
 
-### Test from Website
+### Test Apply Submission
 
-After configuring environment variables:
+```bash
+curl -X POST "APPS_SCRIPT_URL" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "secret": "YOUR_SECRET",
+    "type": "apply",
+    "submittedAt": "2025-01-13T12:00:00Z",
+    "data": {
+      "firstName": "John",
+      "lastName": "Doe",
+      "email": "john@example.com",
+      "phone": "512-555-5678",
+      "programType": "scholarship",
+      "applicationReason": "Seeking support for recovery journey",
+      "consentToContact": true,
+      "consentToTerms": true
+    }
+  }'
+```
 
-1. Go to contact page
-2. Fill out form
-3. Submit
-4. Check Google Sheet for new row
+### Test Homes Verification Submission
+
+```bash
+curl -X POST "APPS_SCRIPT_URL" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "secret": "YOUR_SECRET",
+    "type": "homes-verification",
+    "submittedAt": "2025-01-13T12:00:00Z",
+    "data": {
+      "eligibility": {
+        "isRecoveryHome": "yes",
+        "hasCapacity": "yes",
+        "acceptsReferrals": "yes",
+        "hasHouseRules": "yes"
+      },
+      "about": {
+        "homeName": "Hope House",
+        "contactName": "Jane Manager",
+        "email": "jane@hopehouse.com",
+        "phone": "512-555-9999"
+      },
+      "location": {
+        "streetAddress": "123 Recovery St",
+        "city": "Austin",
+        "state": "TX",
+        "zip": "78701",
+        "totalCapacity": "12",
+        "genderServed": "all"
+      },
+      "policies": {
+        "recoveryProgramRequired": "yes",
+        "staffingLevel": "24/7",
+        "houseRules": ["No drugs", "Curfew"],
+        "certifications": ["NARR Level 2"]
+      },
+      "consent": {
+        "confirmAccurate": true,
+        "allowContact": true,
+        "notifyChanges": true
+      }
+    }
+  }'
+```
+
+## Verification Checklist
+
+After running setup:
+
+- [ ] Open Applications spreadsheet - verify "Submissions" tab with 18 columns
+- [ ] Open Contact spreadsheet - verify "Submissions" tab with 11 columns
+- [ ] Open Volunteer spreadsheet - verify "Submissions" tab with 13 columns
+- [ ] Open Partner spreadsheet - verify "Submissions" tab with 10 columns
+- [ ] Open Homes Verification spreadsheet - verify "Submissions" tab with 34 columns
+
+After test submissions:
+
+- [ ] Check row 2 in each sheet has test data
+- [ ] Verify each field is in the correct column
+- [ ] Verify arrays are comma-separated (e.g., interests, houseRules)
+- [ ] Verify booleans show as "Yes"/"No"
+- [ ] Verify rawJson column contains full submission
 
 ## Troubleshooting
 
-### "Invalid secret" error
-- Verify `HFF_SECRET` in Script Properties matches `.env.local`
-- Ensure no trailing spaces
+### "Unauthorized" Error
+- Check `HFF_SHARED_SECRET` is set in Script Properties
+- Verify secret matches between Next.js and Apps Script
 
-### "Sheet ID not configured" error
-- Check Script Properties are set correctly
-- Property names are case-sensitive
+### "Unknown type" Error
+- Valid types: `apply`, `contact`, `volunteer`, `partner`, `homes-verification`
 
-### Headers don't match
-- Run `initializeAllSheets` function to reset headers
-- Or manually edit first row in Google Sheet
+### Headers Not Appearing
+- Run the setup action first
+- Check Script Properties for spreadsheet IDs
 
-### Permission denied on sheet
-- Ensure Apps Script account has Editor access to all 4 sheets
-- Check sharing settings on each Google Sheet
+### Missing Columns
+- Run setup again - it will append missing columns to the right
+- Existing data is preserved
 
-### No data appearing
-- Check Execution log in Apps Script for errors
-- Verify webhook URL is correct (must end with `/exec`)
-- Test with `doGet` first (just visit URL in browser)
+## Spreadsheet Links
 
-## Updating the Script
-
-When making changes:
-
-1. Edit `Code.gs` in Apps Script editor
-2. Save (Ctrl/Cmd + S)
-3. **Deploy** → **Manage deployments**
-4. Click pencil icon on active deployment
-5. Set **Version** to `New version`
-6. Click **Deploy**
-
-Note: The webhook URL stays the same after updates.
-
-## Security Notes
-
-- The `HFF_SECRET` provides basic protection against unauthorized submissions
-- Always transmit secret over HTTPS (Apps Script enforces this)
-- Consider adding rate limiting if abuse occurs
-- Monitor Google Sheet for suspicious patterns
-- Never expose the secret in client-side code
+| Type | Spreadsheet ID |
+|------|----------------|
+| Applications | `1SlW2d3qnOIO4gOFt_C683UrcZv7bl7f9nadbj01QQhA` |
+| Contact | `1lr9dNdS1_rnJR5qaA1d7NrWNeC4Em2LtrGI4VZ_Uwgo` |
+| Volunteer | `1BIQwrLomRHYElzDqVQ3XNA_B0xqbyGx7UEwyclEpr-o` |
+| Partner | `1bW27Ud_Uuey4vtL2Dn8eZyPJg94Ip5zcXy6d9Bdk7xM` |
+| Homes Verification | `19c7LE2eJz_Zsrr5_zS40N3SrEqSeGcM5SooGhgkajEA` |
