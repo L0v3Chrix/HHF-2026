@@ -4,7 +4,7 @@
  * Posts form data to the Google Apps Script webhook
  */
 
-export type FormType = "contact" | "volunteer" | "partner" | "homes";
+export type FormType = "contact" | "volunteer" | "partner" | "homes-verification";
 
 export interface WebhookResponse {
   ok: boolean;
@@ -24,8 +24,9 @@ export async function submitToGoogleSheets<T>({
   formType,
   data,
 }: SubmitOptions<T>): Promise<WebhookResponse> {
-  const webhookUrl = process.env.GOOGLE_APPS_SCRIPT_WEBHOOK;
-  const secret = process.env.HFF_SHEETS_SECRET;
+  // Support both legacy and current env var names
+  const webhookUrl = process.env.APPS_SCRIPT_WEBHOOK_URL || process.env.GOOGLE_APPS_SCRIPT_WEBHOOK;
+  const secret = process.env.APPS_SCRIPT_SHARED_SECRET || process.env.HFF_SHEETS_SECRET;
 
   if (!webhookUrl) {
     console.error("GOOGLE_APPS_SCRIPT_WEBHOOK not configured");
@@ -195,7 +196,7 @@ export async function submitHomesForm(
   data: HomesFormPayload
 ): Promise<WebhookResponse> {
   return submitToGoogleSheets({
-    formType: "homes",
+    formType: "homes-verification",
     data,
   });
 }

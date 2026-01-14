@@ -6,44 +6,52 @@
    ============================================================================ */
 
 :root {
-  /* Background */
-  --hf-bg-base: #1a1512;
-  --hf-bg-elevated: #2a2520;
+  /* Background - Cool purple-charcoal (no brown undertones) */
+  --hf-bg-base: #15131a;
+  --hf-bg-elevated: #1f1d26;
 
-  /* Foreground / Text */
-  --hf-text-primary: #f5f0e8;
-  --hf-text-secondary: #c8c0b0;
-  --hf-text-muted: #8a8070;
+  /* Foreground / Text - Pure cream without brown cast */
+  --hf-text-primary: #f8f6f2;
+  --hf-text-secondary: #c5c0b8;
+  --hf-text-muted: #7a7572;
 
-  /* Brand: Maroon */
-  --hf-maroon: #7a2332;
-  --hf-maroon-dark: #4a1520;
-  --hf-maroon-light: #9a3342;
+  /* Brand: Plum (primary purple) */
+  --hf-plum: #5C3158;
+  --hf-plum-dark: #4A2848;
+  --hf-plum-light: #6B3A68;
 
-  /* Brand: Amber */
-  --hf-amber: #c4623a;
-  --hf-amber-dark: #8a3f24;
-  --hf-amber-light: #d4825a;
+  /* Brand: Ruby (primary red) */
+  --hf-ruby: #8B2D3A;
+  --hf-ruby-dark: #722535;
+  --hf-ruby-light: #A33545;
 
-  /* Brand: Red (Actions) */
-  --hf-red: #a03040;
-  --hf-red-hover: #b04050;
+  /* Legacy aliases for compatibility */
+  --hf-maroon: var(--hf-ruby);
+  --hf-maroon-dark: var(--hf-ruby-dark);
+  --hf-maroon-light: var(--hf-ruby-light);
+
+  /* Accent - Vibrant magenta-red for CTAs */
+  --hf-accent: #C42D44;
+  --hf-accent-hover: #D43D54;
 
   /* Surface */
   --hf-glass: rgba(255, 255, 255, 0.05);
   --hf-glass-border: rgba(255, 255, 255, 0.1);
 
   /* Buttons */
-  --hf-btn-cream-bg: #f5f0e8;
-  --hf-btn-cream-text: #3a2a20;
-  --hf-btn-cream-hover: #ebe5db;
-  --hf-btn-red-bg: #a03040;
-  --hf-btn-red-text: #f5f0e8;
-  --hf-btn-red-hover: #b04050;
+  --hf-btn-cream-bg: #f8f6f2;
+  --hf-btn-cream-text: #1a1520;
+  --hf-btn-cream-hover: #ebe8e2;
+  --hf-btn-red-bg: #C42D44;
+  --hf-btn-red-text: #f8f6f2;
+  --hf-btn-red-hover: #D43D54;
 
   /* Help Now ATX */
-  --hf-helpnow-bg: rgba(120, 50, 60, 0.7);
-  --hf-helpnow-border: rgba(160, 80, 90, 0.5);
+  --hf-helpnow-bg: rgba(92, 49, 88, 0.7);
+  --hf-helpnow-border: rgba(107, 58, 104, 0.5);
+
+  /* Cream color for cards */
+  --hf-cream: #f8f6f2;
 
   /* Typography - uses next/font CSS variables */
   --font-heading: var(--font-playfair), Georgia, serif;
@@ -174,7 +182,7 @@
   }
 
   a:hover {
-    color: var(--hf-amber-light);
+    color: var(--hf-ruby-light);
   }
 }
 
@@ -301,13 +309,13 @@
   --color-hf-bg-elevated: var(--hf-bg-elevated);
   --color-hf-text: var(--hf-text-primary);
   --color-hf-text-muted: var(--hf-text-secondary);
-  --color-hf-maroon: var(--hf-maroon);
-  --color-hf-maroon-dark: var(--hf-maroon-dark);
-  --color-hf-maroon-light: var(--hf-maroon-light);
-  --color-hf-amber: var(--hf-amber);
-  --color-hf-amber-dark: var(--hf-amber-dark);
-  --color-hf-amber-light: var(--hf-amber-light);
-  --color-hf-red: var(--hf-red);
+  --color-hf-plum: var(--hf-plum);
+  --color-hf-plum-dark: var(--hf-plum-dark);
+  --color-hf-plum-light: var(--hf-plum-light);
+  --color-hf-ruby: var(--hf-ruby);
+  --color-hf-ruby-dark: var(--hf-ruby-dark);
+  --color-hf-ruby-light: var(--hf-ruby-light);
+  --color-hf-accent: var(--hf-accent);
 
   /* shadcn compatibility */
   --color-card: var(--card);

@@ -82,27 +82,27 @@ export default function Home() {
 
       {/* Hero Section with Cinematic Bokeh Background */}
       <main className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden">
-        {/* Cinematic Bokeh Background - matching mock exactly */}
+        {/* Cinematic Bokeh Background - purple/ruby theme */}
         <div className="absolute inset-0 overflow-hidden">
-          {/* Dark base */}
-          <div className="absolute inset-0 bg-[#1a1a1a]" />
+          {/* Dark base - cool purple-black */}
+          <div className="absolute inset-0 bg-[#15131a]" />
 
           {/* Strong vignette overlay - darker at edges */}
-          <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_40%,transparent_0%,rgba(10,10,10,0.4)_50%,rgba(5,5,5,0.85)_100%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_60%_at_50%_40%,transparent_0%,rgba(15,13,20,0.4)_50%,rgba(10,8,15,0.85)_100%)]" />
 
-          {/* Primary warm bokeh - bottom left (large, orange/amber) */}
-          <div className="absolute bottom-[-20%] left-[-5%] w-[700px] h-[700px] rounded-full bg-[#D4763A]/50 blur-[150px]" />
-          <div className="absolute bottom-[-10%] left-[5%] w-[500px] h-[500px] rounded-full bg-[#E8924A]/40 blur-[120px]" />
+          {/* Primary plum/magenta bokeh - bottom left (large) */}
+          <div className="absolute bottom-[-20%] left-[-5%] w-[700px] h-[700px] rounded-full bg-[#6B3A68]/45 blur-[150px]" />
+          <div className="absolute bottom-[-10%] left-[5%] w-[500px] h-[500px] rounded-full bg-[#8B4A88]/35 blur-[120px]" />
 
-          {/* Secondary warm bokeh - bottom center-left */}
-          <div className="absolute bottom-[5%] left-[20%] w-[350px] h-[350px] rounded-full bg-[#C4623A]/35 blur-[100px]" />
-          <div className="absolute bottom-[15%] left-[30%] w-[250px] h-[250px] rounded-full bg-[#B8860B]/25 blur-[80px]" />
+          {/* Secondary ruby/red bokeh - bottom center-right */}
+          <div className="absolute bottom-[5%] right-[15%] w-[400px] h-[400px] rounded-full bg-[#8B2D3A]/40 blur-[100px]" />
+          <div className="absolute bottom-[10%] right-[25%] w-[300px] h-[300px] rounded-full bg-[#A33545]/30 blur-[80px]" />
 
-          {/* Subtle warm glow bottom right */}
-          <div className="absolute bottom-[-5%] right-[10%] w-[400px] h-[400px] rounded-full bg-[#8B4513]/20 blur-[120px]" />
+          {/* Subtle plum glow bottom center */}
+          <div className="absolute bottom-[-5%] left-[30%] w-[450px] h-[450px] rounded-full bg-[#5C3158]/25 blur-[120px]" />
 
-          {/* Center haze behind cards - subtle lift */}
-          <div className="absolute top-[40%] left-1/2 -translate-x-1/2 w-[900px] h-[500px] rounded-full bg-[#2a2020]/60 blur-[80px]" />
+          {/* Center haze behind cards - subtle purple lift */}
+          <div className="absolute top-[40%] left-1/2 -translate-x-1/2 w-[900px] h-[500px] rounded-full bg-[#201a25]/60 blur-[80px]" />
 
           {/* Subtle noise texture overlay for film grain feel */}
           <div className="absolute inset-0 opacity-[0.03] mix-blend-overlay bg-[url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noise)%22/%3E%3C/svg%3E')]" />
@@ -224,7 +224,7 @@ export default function Home() {
           <div className="text-center">
             <a
               href="/impact"
-              className="inline-flex items-center gap-2 text-[var(--hf-accent)] hover:text-[var(--hf-accent-hover)] transition-colors font-medium"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full border border-[var(--hf-glass-border)] text-[var(--hf-text-primary)] font-medium hover:bg-white/5 hover:border-[var(--hf-accent)] transition-colors"
             >
               See Our Impact
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

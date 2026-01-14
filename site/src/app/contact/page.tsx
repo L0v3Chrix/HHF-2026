@@ -281,9 +281,14 @@ export default function ContactPage() {
               <p className="text-sm text-[var(--hf-text-secondary)] mb-3">
                 Heart Forward doesn&apos;t provide crisis services or medical advice.
               </p>
-              <p className="text-sm text-[var(--hf-text-muted)]">
-                For broader support navigation, <a href={EXTERNAL.helpNowATX} target="_blank" rel="noopener noreferrer" className="text-[var(--hf-accent)] hover:underline">Help Now ATX</a> can help.
-              </p>
+              <a
+                href={EXTERNAL.helpNowATX}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center justify-center px-5 py-2.5 rounded-full border border-[var(--hf-glass-border)] text-[var(--hf-text-primary)] text-sm font-medium hover:bg-white/5 transition-colors"
+              >
+                Help Now ATX
+              </a>
             </div>
           </div>
         </section>

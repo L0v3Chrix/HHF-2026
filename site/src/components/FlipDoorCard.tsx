@@ -179,12 +179,13 @@ export function FlipDoorCard({
             transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)",
           }}
         >
-          {/* Front */}
+          {/* Front - disable pointer events when flipped so back links work */}
           <div
             className={cn(
               "absolute inset-0 rounded-[24px] p-6 sm:p-8",
               cardGradient,
-              "shadow-2xl shadow-black/40"
+              "shadow-2xl shadow-black/40",
+              isFlipped && "pointer-events-none"
             )}
             style={{ backfaceVisibility: "hidden", minHeight: cardMinHeight }}
           >
@@ -203,12 +204,13 @@ export function FlipDoorCard({
             />
           </div>
 
-          {/* Back */}
+          {/* Back - enable pointer events only when flipped */}
           <div
             className={cn(
               "absolute inset-0 rounded-[24px] p-6 sm:p-8",
               cardGradient,
-              "shadow-2xl shadow-black/40"
+              "shadow-2xl shadow-black/40",
+              !isFlipped && "pointer-events-none"
             )}
             style={{
               backfaceVisibility: "hidden",

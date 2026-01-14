@@ -82,7 +82,7 @@ export default function DonatePage() {
                 If finances are tight, sharing resources is also powerful.
               </p>
               <button
-                className="inline-flex items-center justify-center px-5 py-2.5 rounded-full border border-[var(--hf-glass-border)] text-[var(--hf-text-primary)] text-sm font-medium hover:bg-white/5 transition-colors"
+                className="inline-flex items-center justify-center px-5 py-2.5 rounded-full border border-[var(--hf-glass-border)] text-[var(--hf-text-primary)] text-sm font-medium hover:bg-white/5 hover:border-[var(--hf-accent)] transition-colors"
               >
                 Share Resources
               </button>

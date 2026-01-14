@@ -38,7 +38,7 @@ export default function ScholarshipsOverviewPage() {
               </Link>
               <Link
                 href="/programs/scholarships"
-                className="inline-flex items-center justify-center px-6 py-3 rounded-full border border-[var(--hf-glass-border)] text-[var(--hf-text-primary)] font-medium hover:bg-white/5 transition-colors"
+                className="inline-flex items-center justify-center px-6 py-3 rounded-full border border-[var(--hf-glass-border)] text-[var(--hf-text-primary)] font-medium hover:bg-white/5 hover:border-[var(--hf-accent)] transition-colors"
               >
                 Learn How Scholarships Work
               </Link>

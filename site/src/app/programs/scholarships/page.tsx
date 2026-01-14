@@ -109,18 +109,19 @@ export default function ScholarshipsPage() {
             </div>
 
             {/* Safety Line */}
-            <p className="text-sm text-[var(--hf-text-muted)]">
-              If you need immediate support right now, you can connect with{" "}
+            <div className="mt-4">
+              <p className="text-sm text-[var(--hf-text-muted)] mb-3">
+                If you need immediate support right now:
+              </p>
               <a
                 href={process.env.NEXT_PUBLIC_HELPNOWATX_URL || "https://helpnowatx.org"}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[var(--hf-accent)] hover:underline"
+                className="inline-flex items-center justify-center px-5 py-2.5 rounded-full border border-[var(--hf-glass-border)] text-[var(--hf-text-primary)] text-sm font-medium hover:bg-white/5 transition-colors"
               >
                 Help Now ATX
               </a>
-              .
-            </p>
+            </div>
           </div>
         </section>
       </main>
